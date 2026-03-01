@@ -1,0 +1,24 @@
+name: Build C++ Program
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Compile main.cpp
+        run: g++ main.cpp -o app
+
+      - name: Upload compiled file
+        uses: actions/upload-artifact@v3
+        with:
+          name: compiled-app
+          path: app
