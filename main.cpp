@@ -3,14 +3,22 @@ using namespace std;
 class Item {
 public:
     string name;
-    string id;
+    static int next_id;
+    int id;
+    Item(string name_) {
+        name = name_;
+        id = next_id++;
+    }
 };
-Item rope;
+int Item::next_id = 0;
 class Recipe {
 public:
     string name;
     map<string, int> ingredients;
-    Item result;
+    Recipe(string name_, map<string, int> ingredients_) {
+        name = name_;
+        ingredients = ingredients_;
+    }
 };
 vector<Recipe> recipes;
 class Area {
@@ -23,12 +31,22 @@ class Character {
 public:
     string name;
     string id;
-    int lvl = 1;
-    int total_exp = 11;
-    int exp = 0;
-    map<string, int> resources = {};
-    vector<Item> items = {};
-    Area area = plains;
+    int lvl;
+    int total_exp;
+    int exp;
+    map<string, int> resources;
+    vector<Item> items;
+    Area area;
+    Character(string name_, string id_) {
+        name = name_;
+        id = id_;
+        lvl = 1;
+        total_exp = 11;
+        exp = 0;
+        resources = {};
+        items = {};
+        area = plains;
+    }
     void add_exp(int added_exp) {
         exp += added_exp;
         while (exp >= total_exp) {
@@ -100,7 +118,7 @@ public:
         for (auto& pair : recipe.ingredients) {
             string name = pair.first;
             int need = pair.second * amount;
-            if (resources[name] < need)
+            if (!resources.count(name) || resources[name] < need)
                 return false;
         }
         return true;
@@ -112,7 +130,12 @@ public:
         int amount;
         cout << "Enter item's amount: ";
         cin >> amount;
-        for (Recipe recipe : recipes) {
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        if (amount <= 0) {
+            cout << "Invalid amount!" << endl;
+            return;
+        }
+        for (Recipe& recipe : recipes) {
             if (recipe.name == item_name) {
                 if (!canCraft(recipe, amount)) {
                     cout << "Not enough resources!" << endl;
@@ -122,6 +145,10 @@ public:
                     string name = pair.first;
                     int need = pair.second * amount;
                     resources[name] -= need;
+                }
+                for (int i = 0; i < amount; i++) {
+                    Item new_item(recipe.name);
+                    items.push_back(new_item);
                 }
                 cout << "Craft success!" << endl;
                 return;
@@ -134,13 +161,16 @@ class World {
 public:
     string name;
     string id;
-    vector<Character> characters = {};
+    vector<Character> characters;
+    World(string name_, string id_) {
+        name = name_;
+        id = id_;
+        characters = {};
+    }
     void create_character() {
-        Character new_character;
         string name;
         cout << "Enter character's name: ";
         getline(cin, name);
-        new_character.name = name;
         string id;
         while (true) {
             cout << "Enter character's ID: ";
@@ -154,11 +184,11 @@ public:
             }
             if (existed) {
                 cout << "This ID is not available!" << endl;
-            } else {
-                new_character.id = id;
-                break;
+                return;
             }
+            break;
         }
+        Character new_character(name, id);
         characters.push_back(new_character);
         cout << "The character was created successfully!" << endl;
     }
@@ -235,11 +265,9 @@ class Menu {
 public:
     vector<World> worlds = {};
     void create_world() {
-        World new_world;
         string name;
         cout << "Enter world's name: ";
         getline(cin, name);
-        new_world.name = name;
         string id;
         while (true) {
             cout << "Enter world's ID: ";
@@ -253,11 +281,10 @@ public:
             }
             if (existed) {
                 cout << "This ID is not available!" << endl;
-            } else {
-                new_world.id = id;
-                break;
             }
+            break;
         }
+        World new_world(name, id);
         worlds.push_back(new_world);
         cout << "The world was created successfully!" << endl;
     }
@@ -329,12 +356,8 @@ public:
 int main() {
     srand(time(0));
     Menu menu;
-    rope.name = "rope";
-    rope.id = "rope";
-    Recipe rope_recipe;
-    rope_recipe.name = "rope";
-    rope_recipe.ingredients = {{"leaf", 4}};
-    rope_recipe.result = rope;
+    Item rope("rope");
+    Recipe rope_recipe("rope", {{"leaf", 4}});
     recipes.push_back(rope_recipe);
     plains.name = "Plains";
     plains.gathered_resources = {
