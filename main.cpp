@@ -34,6 +34,7 @@ public:
     int lvl;
     int total_exp;
     int exp;
+    map<string, int> equipments;
     map<string, int> resources;
     vector<Item> items;
     Area area;
@@ -43,6 +44,7 @@ public:
         lvl = 1;
         total_exp = 11;
         exp = 0;
+        equipments = {{"Left hand", -1},{"Right hand", -1},{"Armor", -1},{"Accessory", -1}};
         resources = {};
         items = {};
         area = plains;
@@ -64,12 +66,57 @@ public:
         }
         cout << "+ " << amount << " " << resource << endl;
     }
-    void info() {
+    Item find_item(int id) {
+        for (Item item : items) {
+            if (item.id == id) {
+                return item;
+            }
+        }
+    }
+    void info(int time) {
         cout << "\nINFO:" << endl;
         cout << "Name: " << name << endl;
         cout << "ID: " << id << endl;
         cout << "LVL: " << lvl << endl;
         cout << "EXP: " << exp << "/" << total_exp << endl;
+        cout << "Time: ";
+        if (time < 25) {
+            cout << "Early morning";
+        } else if (time < 50) {
+            cout << "Mid morning";
+        } else if (time < 75) {
+            cout << "Late morning";
+        } else if (time < 100) {
+            cout << "Early noon";
+        } else if (time < 125) {
+            cout << "Mid noon";
+        } else if (time < 150) {
+            cout << "Late noon";
+        } else if (time < 175) {
+            cout << "Early afternoon";
+        } else if (time < 200) {
+            cout << "Mid afternoon";
+        } else if (time < 225) {
+            cout << "Late afternoon";
+        } else if (time < 250) {
+            cout << "Early evening";
+        } else if (time < 275) {
+            cout << "Mid evening";
+        } else {
+            cout << "Late evening";
+        }
+        cout << endl;
+    }
+    void gear() {
+        cout << "\nEQUIPMENTS:" << endl;
+        for (const auto& pair : equipments) {
+            cout << pair.first << ": ";
+            if (pair.second == -1) {
+                cout << "None" << endl;
+            } else {
+                cout << find_item(pair.second).name << endl;
+            }
+        }
     }
     void pack() {
         if ((resources.empty()) && (items.empty())) {
@@ -161,11 +208,19 @@ class World {
 public:
     string name;
     string id;
+    int time;
     vector<Character> characters;
     World(string name_, string id_) {
         name = name_;
         id = id_;
         characters = {};
+        time = 0;
+    }
+    void set_time(int amount) {
+        time += amount;
+        while (time >= 300) {
+            time -= 300;
+        }
     }
     void create_character() {
         string name;
@@ -226,15 +281,17 @@ public:
                         cout << "- craft" << endl;
                         cout << "- escape" << endl;
                     } else if (cmd == "info") {
-                        cur_character.info();
+                        cur_character.info(time);
                     } else if (cmd == "pack") {
                         cur_character.pack();
                     } else if (cmd == "gather") {
                         cur_character.gather();
+                        set_time(1);
                     } else if (cmd == "recipe") {
                         cur_character.recipe();
                     } else if (cmd == "craft") {
                         cur_character.craft();
+                        set_time(1);
                     } else if (cmd == "escape") {
                         break;
                     } else {
