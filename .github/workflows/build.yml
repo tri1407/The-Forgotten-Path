@@ -3,21 +3,28 @@ name: Build and Release C++
 on:
   push:
     tags:
-    - "v*"
+      - "v*"
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Compile main.cpp (Static Build)
-      run: g++ main.cpp -O2 -static -static-libgcc -static-libstdc++ -o main.exe
+      - name: Setup MinGW
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x64
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: ${{ github.ref_name }}
-        files: main.exe
+      - name: Compile (Static Build)
+        run: g++ main.cpp -O2 -static -static-libgcc -static-libstdc++ -o TheForgottenPath.exe
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: TheForgottenPath.exe
