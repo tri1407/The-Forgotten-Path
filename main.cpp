@@ -24,9 +24,15 @@ vector<Recipe> recipes;
 class Area {
 public:
     string name;
+    string description;
     map<string, int> gathered_resources;
+    vector<Item> items;
+    Area() {
+        items = {};
+    }
 };
-Area plains;
+Area silvergrass_plain;
+Area quietbrook;
 class Character {
 public:
     string name;
@@ -34,7 +40,7 @@ public:
     int lvl;
     int total_exp;
     int exp;
-    map<string, int> equipments;
+    vector<pair<string, int>> equipments;
     map<string, int> resources;
     vector<Item> items;
     Area area;
@@ -47,7 +53,7 @@ public:
         equipments = {{"Left hand", -1},{"Right hand", -1},{"Armor", -1},{"Accessory", -1}};
         resources = {};
         items = {};
-        area = plains;
+        area = silvergrass_plain;
     }
     void add_exp(int added_exp) {
         exp += added_exp;
@@ -123,7 +129,7 @@ public:
             cout << "You have no item!" << endl;
             return;
         }
-        cout << "INVENTORY:" << endl;
+        cout << "\nINVENTORY:" << endl;
         if (!resources.empty()) {
             cout << "Resources:" << endl;
             for (const auto& pair : resources) {
@@ -139,6 +145,11 @@ public:
                 cout << endl;
             }
         }
+    }
+    void look() {
+        cout << endl;
+        cout << area.name << endl;
+        cout << area.description << endl;
     }
     void gather() {
         int total = 0;
@@ -169,6 +180,36 @@ public:
                 return false;
         }
         return true;
+    }
+    void take() {
+        int id;
+        cout << "Enter item's ID: ";
+        cin >> id;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        for (int i = 0; i < area.items.size(); i++) {
+            if (area.items[i].id == id) {
+                items.push_back(area.items[i]);
+                area.items.erase(area.items.begin() + i);
+                cout << "Taken." << endl;
+                return;
+            }
+        }
+        cout << "This ID does not exist!" << endl;
+    }
+    void drop() {
+        int id;
+        cout << "Enter item's ID: ";
+        cin >> id;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        for (int i = 0; i < items.size(); i++) {
+            if (items[i].id == id) {
+                area.items.push_back(items[i]);
+                items.erase(items.begin() + i);
+                cout << "Dropped" << endl;
+                return;
+            }
+        }
+        cout << "This ID does not exist!" << endl;
     }
     void craft() {
         string item_name;
@@ -275,20 +316,34 @@ public:
                     if (cmd == "help") {
                         cout << "\nCOMMANDS:" << endl;
                         cout << "- info" << endl;
+                        cout << "- gear" << endl;
                         cout << "- pack" << endl;
+                        cout << "- look" << endl;
                         cout << "- gather" << endl;
                         cout << "- recipe" << endl;
+                        cout << "- take" << endl;
+                        cout << "- drop" << endl;
                         cout << "- craft" << endl;
                         cout << "- escape" << endl;
                     } else if (cmd == "info") {
                         cur_character.info(time);
+                    } else if (cmd == "gear") {
+                        cur_character.gear();
                     } else if (cmd == "pack") {
                         cur_character.pack();
+                    } else if (cmd == "look") {
+                        cur_character.look();
                     } else if (cmd == "gather") {
                         cur_character.gather();
                         set_time(1);
                     } else if (cmd == "recipe") {
                         cur_character.recipe();
+                    } else if (cmd == "take") {
+                        cur_character.take();
+                        set_time(1);
+                    } else if (cmd == "drop") {
+                        cur_character.drop();
+                        set_time(1);
                     } else if (cmd == "craft") {
                         cur_character.craft();
                         set_time(1);
@@ -416,8 +471,20 @@ int main() {
     Item rope("rope");
     Recipe rope_recipe("rope", {{"leaf", 4}});
     recipes.push_back(rope_recipe);
-    plains.name = "Plains";
-    plains.gathered_resources = {
+    silvergrass_plain.name = "Silvergrass Plain";
+    silvergrass_plain.description = "The wind moves softly through tall silver grass, bending it like waves across an endless sea. A narrow dirt path cuts through the quiet field, leading toward distant hills. The air is calm, and the world feels wide and still.";
+    silvergrass_plain.gathered_resources = {
+        {"leaf", 30},
+        {"pebble", 20},
+        {"wood", 18},
+        {"flower", 12},
+        {"berry", 8},
+        {"mushroom", 7},
+        {"herb", 5}
+    };
+    quietbrook.name = "Quietbrook";
+    quietbrook.description = "A narrow brook flows quietly through the tall grass, its clear water glinting in the light. A small wooden bridge crosses to the other side, worn smooth by time. The gentle sound of running water breaks the silence of the plain.";
+    quietbrook.gathered_resources = {
         {"leaf", 30},
         {"pebble", 20},
         {"wood", 18},
