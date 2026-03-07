@@ -25,9 +25,11 @@ class Area {
 public:
     string name;
     string description;
+    map<string, Area*> directions;
     map<string, int> gathered_resources;
     vector<Item> items;
     Area() {
+        directions = {};
         items = {};
     }
 };
@@ -150,6 +152,16 @@ public:
         cout << endl;
         cout << area.name << endl;
         cout << area.description << endl;
+    }
+    void go() {
+        string direction;
+        cout << "Enter direction: ";
+        getline(cin, direction);
+        if (area.directions.find(direction) != area.directions.end()) {
+            area = *area.directions[direction];
+            return;
+        }
+        cout << "You can't go this way!" << endl;
     }
     void gather() {
         int total = 0;
@@ -319,6 +331,7 @@ public:
                         cout << "- gear" << endl;
                         cout << "- pack" << endl;
                         cout << "- look" << endl;
+                        cout << "- go" << endl;
                         cout << "- gather" << endl;
                         cout << "- recipe" << endl;
                         cout << "- take" << endl;
@@ -333,6 +346,9 @@ public:
                         cur_character.pack();
                     } else if (cmd == "look") {
                         cur_character.look();
+                    } else if (cmd == "go") {
+                        cur_character.go();
+                        set_time(1);
                     } else if (cmd == "gather") {
                         cur_character.gather();
                         set_time(1);
@@ -482,6 +498,7 @@ int main() {
         {"mushroom", 7},
         {"herb", 5}
     };
+    silvergrass_plain.directions["north"] = &quietbrook;
     quietbrook.name = "Quietbrook";
     quietbrook.description = "A narrow brook flows quietly through the tall grass, its clear water glinting in the light. A small wooden bridge crosses to the other side, worn smooth by time. The gentle sound of running water breaks the silence of the plain.";
     quietbrook.gathered_resources = {
@@ -493,6 +510,7 @@ int main() {
         {"mushroom", 7},
         {"herb", 5}
     };
+    quietbrook.directions["south"] = &silvergrass_plain;
     cout << "THE FORGOTTEN PATH" << endl;
     cout << "(c) The Syntax 2026. All rights reserved." << endl;
     cout << "Version 0.1" << endl;
