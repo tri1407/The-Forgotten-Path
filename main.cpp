@@ -21,7 +21,6 @@ bool is_integer(const string& s) {
 class Area {
 public:
     string name;
-<<<<<<< HEAD
     string description;
     map<string, string> directions;
     map<string, int> gathered_resources;
@@ -30,81 +29,32 @@ public:
     }
 };
 unordered_map<string, Area> areas = {};
-=======
-    static int next_id;
-    int id;
-    Item(string name_) {
-        name = name_;
-        id = next_id++;
-    }
-};
-int Item::next_id = 0;
->>>>>>> bd3c4645b28d00091dcada70baeb0818cc5f96e6
 class Recipe {
 public:
     string name;
     map<string, int> ingredients;
-<<<<<<< HEAD
 };
 unordered_map<string, Recipe> recipes = {};
 class Player {
-=======
-    Recipe(string name_, map<string, int> ingredients_) {
-        name = name_;
-        ingredients = ingredients_;
-    }
-};
-vector<Recipe> recipes;
-class Area {
-public:
-    string name;
-    string description;
-    map<string, Area*> directions;
-    map<string, int> gathered_resources;
-    vector<Item> items;
-    Area() {
-        directions = {};
-        items = {};
-    }
-};
-Area silvergrass_plain;
-Area quietbrook;
-class Character {
->>>>>>> bd3c4645b28d00091dcada70baeb0818cc5f96e6
 public:
     string name;
     string id;
     int lvl;
     int total_exp;
     int exp;
-<<<<<<< HEAD
     int health;
     string cur_area;
     int time;
     map<string, int> resources;
     Player(string name_, string id_) {
-=======
-    vector<pair<string, int>> equipments;
-    map<string, int> resources;
-    vector<Item> items;
-    Area area;
-    Character(string name_, string id_) {
->>>>>>> bd3c4645b28d00091dcada70baeb0818cc5f96e6
         name = name_;
         id = id_;
         lvl = 1;
         total_exp = 11;
         exp = 0;
-<<<<<<< HEAD
         health = 100;
         cur_area = "silvergrass plain";
         time = 0;
-=======
-        equipments = {{"Left hand", -1},{"Right hand", -1},{"Armor", -1},{"Accessory", -1}};
-        resources = {};
-        items = {};
-        area = silvergrass_plain;
->>>>>>> bd3c4645b28d00091dcada70baeb0818cc5f96e6
     }
     void add_exp(int added_exp) {
         exp += added_exp;
@@ -123,7 +73,6 @@ public:
         }
         cout << "+ " << amount << " " << resource << endl;
     }
-<<<<<<< HEAD
     void set_time(int amount) {
         time += amount;
         while (time >= 300) {
@@ -132,25 +81,11 @@ public:
     }
     void profile() {
         cout << "\nPROFILE" << endl;
-=======
-    Item find_item(int id) {
-        for (Item item : items) {
-            if (item.id == id) {
-                return item;
-            }
-        }
-    }
-    void info(int time) {
-        cout << "\nINFO:" << endl;
->>>>>>> bd3c4645b28d00091dcada70baeb0818cc5f96e6
         cout << "Name: " << name << endl;
         cout << "ID: " << id << endl;
         cout << "Level: " << lvl << endl;
         cout << "EXP: " << exp << "/" << total_exp << endl;
-<<<<<<< HEAD
         cout << "Health: " << health << endl;
-=======
->>>>>>> bd3c4645b28d00091dcada70baeb0818cc5f96e6
         cout << "Time: ";
         if (time < 25) {
             cout << "Early morning";
@@ -178,52 +113,19 @@ public:
             cout << "Late evening";
         }
         cout << endl;
-<<<<<<< HEAD
-=======
-    }
-    void gear() {
-        cout << "\nEQUIPMENTS:" << endl;
-        for (const auto& pair : equipments) {
-            cout << pair.first << ": ";
-            if (pair.second == -1) {
-                cout << "None" << endl;
-            } else {
-                cout << find_item(pair.second).name << endl;
-            }
-        }
->>>>>>> bd3c4645b28d00091dcada70baeb0818cc5f96e6
     }
     void pack() {
         if (resources.empty()) {
             cout << "You have no resource." << endl;
             return;
         }
-<<<<<<< HEAD
         cout << "\nRESOURCES" << endl;
         for (const auto& pair : resources) {
             cout << "- " << pair.first << ": " << pair.second << endl;
-=======
-        cout << "\nINVENTORY:" << endl;
-        if (!resources.empty()) {
-            cout << "Resources:" << endl;
-            for (const auto& pair : resources) {
-                cout << "- " << pair.first << ": " << pair.second << endl;
-            }
-        }
-        if (!items.empty()) {
-            cout << endl;
-            cout << "Items:" << endl;
-            for (Item item : items) {
-                cout << "Name: " << item.name << endl;
-                cout << "ID: " << item.id << endl;
-                cout << endl;
-            }
->>>>>>> bd3c4645b28d00091dcada70baeb0818cc5f96e6
         }
     }
     void look() {
         cout << endl;
-<<<<<<< HEAD
         Area& area = areas[cur_area];
         cout << area.name << endl;
         cout << area.description << endl;
@@ -236,20 +138,6 @@ public:
             return;
         }
         cout << "You can't go that way!" << endl;
-=======
-        cout << area.name << endl;
-        cout << area.description << endl;
-    }
-    void go() {
-        string direction;
-        cout << "Enter direction: ";
-        getline(cin, direction);
-        if (area.directions.find(direction) != area.directions.end()) {
-            area = *area.directions[direction];
-            return;
-        }
-        cout << "You can't go this way!" << endl;
->>>>>>> bd3c4645b28d00091dcada70baeb0818cc5f96e6
     }
     void gather() {
         Area& area = areas[cur_area];
@@ -288,196 +176,9 @@ public:
         }
         return true;
     }
-<<<<<<< HEAD
     void craft(string name, int amount) {
         if (amount <= 0) {
             cout << "Invalid amount!" << endl;
-=======
-    void take() {
-        int id;
-        cout << "Enter item's ID: ";
-        cin >> id;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        for (int i = 0; i < area.items.size(); i++) {
-            if (area.items[i].id == id) {
-                items.push_back(area.items[i]);
-                area.items.erase(area.items.begin() + i);
-                cout << "Taken." << endl;
-                return;
-            }
-        }
-        cout << "This ID does not exist!" << endl;
-    }
-    void drop() {
-        int id;
-        cout << "Enter item's ID: ";
-        cin >> id;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        for (int i = 0; i < items.size(); i++) {
-            if (items[i].id == id) {
-                area.items.push_back(items[i]);
-                items.erase(items.begin() + i);
-                cout << "Dropped" << endl;
-                return;
-            }
-        }
-        cout << "This ID does not exist!" << endl;
-    }
-    void craft() {
-        string item_name;
-        cout << "Enter item's name: ";
-        getline(cin, item_name);
-        int amount;
-        cout << "Enter item's amount: ";
-        cin >> amount;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        if (amount <= 0) {
-            cout << "Invalid amount!" << endl;
-            return;
-        }
-        for (Recipe& recipe : recipes) {
-            if (recipe.name == item_name) {
-                if (!canCraft(recipe, amount)) {
-                    cout << "Not enough resources!" << endl;
-                    return;
-                }
-                for (auto& pair : recipe.ingredients) {
-                    string name = pair.first;
-                    int need = pair.second * amount;
-                    resources[name] -= need;
-                }
-                for (int i = 0; i < amount; i++) {
-                    Item new_item(recipe.name);
-                    items.push_back(new_item);
-                }
-                cout << "Craft success!" << endl;
-                return;
-            }
-        }
-        cout << "This name does not exist!" << endl;
-    }
-};
-class World {
-public:
-    string name;
-    string id;
-    int time;
-    vector<Character> characters;
-    World(string name_, string id_) {
-        name = name_;
-        id = id_;
-        characters = {};
-        time = 0;
-    }
-    void set_time(int amount) {
-        time += amount;
-        while (time >= 300) {
-            time -= 300;
-        }
-    }
-    void create_character() {
-        string name;
-        cout << "Enter character's name: ";
-        getline(cin, name);
-        string id;
-        while (true) {
-            cout << "Enter character's ID: ";
-            getline(cin, id);
-            bool existed = false;
-            for (Character character : characters) {
-                if (character.id == id) {
-                    existed = true;
-                    break;
-                }
-            }
-            if (existed) {
-                cout << "This ID is not available!" << endl;
-                return;
-            }
-            break;
-        }
-        Character new_character(name, id);
-        characters.push_back(new_character);
-        cout << "The character was created successfully!" << endl;
-    }
-    void delete_character() {
-        string id;
-        cout << "Enter character's ID: ";
-        getline(cin, id);
-        for (int i = 0; i < characters.size(); i++) {
-            if (characters[i].id == id) {
-                characters.erase(characters.begin() + i);
-                cout << "The character was deleted successfully!" << endl;
-                return;
-            }
-        }
-        cout << "This ID does not exist!" << endl;
-    }
-    void select_character() {
-        string id;
-        cout << "Enter character's ID: ";
-        getline(cin, id);
-        for (Character& character : characters) {
-            if (character.id == id) {
-                Character& cur_character = character;
-                cout << "The character was select successfully!" << endl;
-                while (true) {
-                    string cmd;
-                    cout << "> ";
-                    getline(cin, cmd);
-                    if (cmd == "help") {
-                        cout << "\nCOMMANDS:" << endl;
-                        cout << "- info" << endl;
-                        cout << "- gear" << endl;
-                        cout << "- pack" << endl;
-                        cout << "- look" << endl;
-                        cout << "- go" << endl;
-                        cout << "- gather" << endl;
-                        cout << "- recipe" << endl;
-                        cout << "- take" << endl;
-                        cout << "- drop" << endl;
-                        cout << "- craft" << endl;
-                        cout << "- escape" << endl;
-                    } else if (cmd == "info") {
-                        cur_character.info(time);
-                    } else if (cmd == "gear") {
-                        cur_character.gear();
-                    } else if (cmd == "pack") {
-                        cur_character.pack();
-                    } else if (cmd == "look") {
-                        cur_character.look();
-                    } else if (cmd == "go") {
-                        cur_character.go();
-                        set_time(1);
-                    } else if (cmd == "gather") {
-                        cur_character.gather();
-                        set_time(1);
-                    } else if (cmd == "recipe") {
-                        cur_character.recipe();
-                    } else if (cmd == "take") {
-                        cur_character.take();
-                        set_time(1);
-                    } else if (cmd == "drop") {
-                        cur_character.drop();
-                        set_time(1);
-                    } else if (cmd == "craft") {
-                        cur_character.craft();
-                        set_time(1);
-                    } else if (cmd == "escape") {
-                        break;
-                    } else {
-                        cout << "Invalid input! Please try again." << endl;
-                    }
-                }
-                return;
-            }
-        }
-        cout << "This ID does not exist!" << endl;
-    }
-    void display_all_characters() {
-        if (characters.empty()) {
-            cout << "You have no character!" << endl;
->>>>>>> bd3c4645b28d00091dcada70baeb0818cc5f96e6
             return;
         }
         if (!recipes.count(name)) {
@@ -501,7 +202,6 @@ public:
 };
 class Menu {
 public:
-<<<<<<< HEAD
     vector<Player> players;
     Player cur_player = Player("", "");
     void start() {
@@ -538,41 +238,6 @@ public:
         for (int i = 0; i < players.size(); i++) {
             if (players[i].id == id) {
                 cout << "This ID is not available!" << endl;
-=======
-    vector<World> worlds = {};
-    void create_world() {
-        string name;
-        cout << "Enter world's name: ";
-        getline(cin, name);
-        string id;
-        while (true) {
-            cout << "Enter world's ID: ";
-            getline(cin, id);
-            bool existed = false;
-            for (World world : worlds) {
-                if (world.id == id) {
-                    existed = true;
-                    break;
-                }
-            }
-            if (existed) {
-                cout << "This ID is not available!" << endl;
-            }
-            break;
-        }
-        World new_world(name, id);
-        worlds.push_back(new_world);
-        cout << "The world was created successfully!" << endl;
-    }
-    void delete_world() {
-        string id;
-        cout << "Enter world's ID: ";
-        getline(cin, id);
-        for (int i = 0; i < worlds.size(); i++) {
-            if (worlds[i].id == id) {
-                worlds.erase(worlds.begin() + i);
-                cout << "The world was deleted successfully!" << endl;
->>>>>>> bd3c4645b28d00091dcada70baeb0818cc5f96e6
                 return;
             }
         }
@@ -704,7 +369,6 @@ void parser(string cmd) {
     }
 }
 int main() {
-<<<<<<< HEAD
     ifstream f1("data/areas.json");
     json areas_data;
     f1 >> areas_data;
@@ -742,38 +406,6 @@ int main() {
         }
     }
     cout << "THE FORGOTTEN PATH: Journey Arc" << endl;
-=======
-    srand(time(0));
-    Menu menu;
-    Item rope("rope");
-    Recipe rope_recipe("rope", {{"leaf", 4}});
-    recipes.push_back(rope_recipe);
-    silvergrass_plain.name = "Silvergrass Plain";
-    silvergrass_plain.description = "The wind moves softly through tall silver grass, bending it like waves across an endless sea. A narrow dirt path cuts through the quiet field, leading toward distant hills. The air is calm, and the world feels wide and still.";
-    silvergrass_plain.gathered_resources = {
-        {"leaf", 30},
-        {"pebble", 20},
-        {"wood", 18},
-        {"flower", 12},
-        {"berry", 8},
-        {"mushroom", 7},
-        {"herb", 5}
-    };
-    silvergrass_plain.directions["north"] = &quietbrook;
-    quietbrook.name = "Quietbrook";
-    quietbrook.description = "A narrow brook flows quietly through the tall grass, its clear water glinting in the light. A small wooden bridge crosses to the other side, worn smooth by time. The gentle sound of running water breaks the silence of the plain.";
-    quietbrook.gathered_resources = {
-        {"leaf", 30},
-        {"pebble", 20},
-        {"wood", 18},
-        {"flower", 12},
-        {"berry", 8},
-        {"mushroom", 7},
-        {"herb", 5}
-    };
-    quietbrook.directions["south"] = &silvergrass_plain;
-    cout << "THE FORGOTTEN PATH" << endl;
->>>>>>> bd3c4645b28d00091dcada70baeb0818cc5f96e6
     cout << "(c) The Syntax 2026. All rights reserved." << endl;
     cout << "Version 0.3 (Enter 'start' for more information)" << endl;
     while (true) {
