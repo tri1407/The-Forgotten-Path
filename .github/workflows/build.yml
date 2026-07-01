@@ -15,19 +15,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Add MinGW to PATH
-        run: echo "C:\msys64\mingw64\bin" >> $env:GITHUB_PATH
+      - name: Setup MinGW
+        run: |
+          choco install mingw -y
+          echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" >> $env:GITHUB_PATH
 
-      - name: Compile (Static Build)
-        run: g++ main.cpp -O2 -static -static-libgcc -static-libstdc++ -o TheForgottenPath.exe
+      - name: Build project
+        run: |
+          g++ main.cpp -O2 -static -static-libgcc -static-libstdc++ -o TheForgottenPath.exe
+
+      - name: Package data
+        run: |
+          mkdir release
+          copy TheForgottenPath.exe release/
+          xcopy data release\data /E /I /Y
+          copy README.md release/
+
+      - name: Zip release
+        run: |
+          powershell Compress-Archive release TheForgottenPath.zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          files: TheForgottenPath.exe
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          files: TheForgottenPath.exe
+          files: TheForgottenPath.zip
