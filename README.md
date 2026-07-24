@@ -79,3 +79,11 @@ Currently in active development.
 Core systems (combat, crafting, inventory) are being implemented and refined.
 
 The path is being shaped.
+
+---
+
+## ❤️ Support
+
+If you enjoy **The Forgotten Path**, consider supporting its development.
+
+💙 Donate: https://paypal.me/tri1407
